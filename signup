@@ -1,0 +1,453 @@
+<?php 
+include 'admin/db_connect.php'; 
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .masthead {
+            min-height: 23vh !important;
+            height: 23vh !important;
+        }
+
+        .masthead:before {
+            min-height: 23vh !important;
+            height: 23vh !important;
+        }
+
+        img#cimg {
+            max-height: 10vh;
+            max-width: 6vw;
+        }
+
+        .card {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .form-control {
+            background-color: #555;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .datepickerY, .select2, .custom-select {
+            background-color: #555;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: black;
+        }
+
+        #msg {
+            color: #fff;
+        }
+
+        /* Add shadow to the field labels */
+        label.control-label {
+            text-shadow: 1px 1px 2px #001;
+            color: #fff; /* Set the text color to white or any contrasting color */
+            padding: 5px; /* Add padding for better appearance */
+            border-radius: 5px; /* Optional: Add border-radius for rounded corners */
+            display: inline-block; /* Ensure proper display for inline-block elements */
+            margin-bottom: 5px; /* Add margin for spacing between labels */
+        }
+        #create_account {
+            display: none;
+        }
+        .user-type-row {
+            background-color: #555;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<header class="masthead">
+    <div class="container-fluid h-100">
+        <div class="row h-100 align-items-center justify-content-center text-center">
+            <div class="col-lg-8 align-self-end mb-4 page-title">
+                <h3 class="text-white">Create Account</h3>
+                <hr class="divider my-4" />
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container mt-3 pt-2">
+    <div class="col-lg-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="col-md-12">
+                    <div class="row user-type-row">
+                        <div class="col-md-12 text-center">
+                            <label for="" class="control-label">Select User Type:</label>
+                            <div class="d-flex justify-content-center">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="user_type" id="alumniRadio" value="alumni">
+                                    <label class="form-check-label" for="alumniRadio">Alumni</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="user_type" id="studentRadio" value="student">
+                                    <label class="form-check-label" for="studentRadio">Student</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <form action="" id="create_account">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">General Register Number</label>
+                                    <input type="text" class="form-control" name="gr_no" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">First Name</label>
+                                    <input type="text" class="form-control" name="firstname" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">Father's Name</label>
+                                    <input type="text" class="form-control" name="middlename" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">Last Name</label>
+                                    <input type="text" class="form-control" name="lastname">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                <label for="" class="control-label">Gender</label>
+                                    <select class="custom-select" name="gender" required>
+                                        <option value="" disabled selected>Select your gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">Batch</label>
+                                    <input type="input" class="form-control datepickerY" name="batch" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">Branch</label>
+                                    <select class="custom-select select2" name="course_id" required>
+                                        <option></option>
+                                        <?php 
+                                        $course = $conn->query("SELECT * FROM courses order by course asc");
+                                        while($row=$course->fetch_assoc()):
+                                        ?>
+                                            <option value="<?php echo $row['id'] ?>"><?php echo $row['course'] ?></option>
+                                        <?php endwhile; ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">Current Year</label>
+                                    <select class="custom-select" name="current_year" >
+                                        <option disabled selected>Select your current year</option>
+                                        <option>FE</option>
+                                        <option>SE</option>
+                                        <option>TE</option>
+                                        <option>BE</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="" class="control-label">Are you currently doing any job/internship?</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="job_status" id="jobYes" value="yes">
+                                        <label class="form-check-label" for="jobYes">Yes</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="job_status" id="jobNo" value="no" checked>
+                                        <label class="form-check-label" for="jobNo">No</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" id="jobFields">
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">Company Name</label>
+                                    <textarea name="connected_to" id="" cols="30" rows="1" class="form-control"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">Job Title</label>
+                                    <input type="text" class="form-control" name="job_title">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">Location</label>
+                                    <input type="text" class="form-control" name="location" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">Contact</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">+91</span>
+                                        </div>
+                                        <input type="text" class="form-control" name="contact" pattern="\d{10}" title="Contact number must be 10 digits" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">Image</label>
+                                    <input type="file" class="form-control" name="img" onchange="displayImg(this,$(this))">
+                                    <img src="" alt="" id="cimg">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="" class="control-label">Email</label>
+                                    <input type="email" class="form-control" name="email" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="" class="control-label">Password</label>
+                                        <input type="password" class="form-control" name="password" id="password" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="" class="control-label">Re-enter Password</label>
+                                        <input type="password" class="form-control" name="re_password" id="re_password" required>
+                                    </div>
+                                </div>
+                                <div id="password_match"></div>
+
+
+                            <div id="msg"></div>
+                            <hr class="divider">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <button class="btn btn-primary">Create Account</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+    $('.datepickerY').datepicker({
+        format: " yyyy", 
+        viewMode: "years", 
+        minViewMode: "years"
+    });
+
+    $('.select2').select2({
+        placeholder:"Please Select Here",
+        width:"100%"
+    });
+    var previousUserType = '';
+
+    $('input[name="user_type"]').change(function() {
+    var currentUserType = $(this).val();
+
+    if (currentUserType === 'alumni' || currentUserType === 'student') {
+        $('#create_account').show();
+        updateBatchDatepicker(currentUserType);
+        
+        // Add an "Alumni" option and select it by default for alumni user type
+        if (currentUserType === 'alumni') {
+            $('select[name="current_year"]').html('<option value="Alumni" selected>Alumni</option>');
+        } else {
+            // For other user types, revert to the default options
+            $('select[name="current_year"]').html('<option disabled selected>Select your current year</option><option value="FE">FE</option><option value="SE">SE</option><option value="TE">TE</option><option value="BE">BE</option>');
+        }
+    } else {
+        $('#create_account').hide();
+    }
+
+    if (currentUserType !== previousUserType) {
+        if (previousUserType !== '') {
+            // Reload the page using JavaScript
+            location.reload(true);
+        }
+    }
+
+    previousUserType = currentUserType;
+});
+
+function updateBatchDatepicker(userType) {
+    var batchDatepicker = $('.datepickerY');
+
+    // Clear existing options
+    batchDatepicker.datepicker('destroy');
+
+    // Set the appropriate date range based on user type
+    if (userType === 'student') {
+        // For students, show future years
+        batchDatepicker.datepicker({
+            format: " yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            startDate: new Date() // Start from the current year
+        });
+    } else if (userType === 'alumni') {
+        // For alumni, show years from 2006 to the current year
+        batchDatepicker.datepicker({
+            format: " yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            startDate: '2006',
+            endDate: new Date()
+        });
+    }
+}
+
+// Initial update of batch datepicker based on user type
+var initialUserType = $('input[name="user_type"]:checked').val();
+updateBatchDatepicker(initialUserType);
+
+function displayImg(input,_this) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#cimg').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// ...
+
+$('#create_account').submit(function (e) {
+    e.preventDefault();
+    start_load();
+    $('#msg').html('');
+
+    // Validate contact number length
+    var contactNumber = $('input[name="contact"]').val();
+    if (contactNumber.length !== 10) {
+        $('#msg').html('<div class="alert alert-danger">Please enter a valid 10-digit mobile number</div>');
+        end_load();
+        return; // Stop form submission if validation fails
+    }
+    
+    var currentYear = $('select[name="current_year"]').val();
+    if (!currentYear) {
+        // If Current Year is not selected, show an alert next to the field
+        $('select[name="current_year"]').after('<div class="alert alert-danger small">Please select a Current Year</div>');
+        end_load();
+        return; // Stop form submission if validation fails
+    }
+    
+    var formData = new FormData($(this)[0]);
+    var userType = $('input[name="user_type"]:checked').val();
+    formData.append('user_type', userType);
+
+    $.ajax({
+        url: 'admin/ajax.php?action=signup',
+        data: new FormData($(this)[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+        method: 'POST',
+        type: 'POST',
+        success: function (resp) {
+            var response = JSON.parse(resp);
+            if (response.status === 'success') {
+                alert('Signup successful! You can login when admin verifies you.');
+                location.replace('index.php');
+            } else if (response.status === 'error') {
+                // Clear existing alert messages
+                $('#msg').html('');
+                
+                if (response.message === 'Email already exists') {
+                    $('#msg').html('<div class="alert alert-danger">Email already exists</div>');
+                } else if (response.message === 'Gr no already exists') {
+                    // Display Gr no exists alert next to the Gr no field
+                    $('input[name="gr_no"]').after('<div class="alert alert-danger">Gr no already exists</div>');
+                    
+                } else {
+                    $('#msg').html('<div class="alert alert-danger">' + response.message + '</div>');
+                }
+                end_load();
+            }
+        },
+        error: function (xhr, status, error) {
+            // Handle errors, you can log them to console for debugging
+            console.error(xhr.responseText);
+            $('#msg').html('<div class="alert alert-danger">Error occurred while processing your request.</div>');
+            end_load();
+        }
+    });
+});
+
+$(document).ready(function() {
+        // Initially hide the job-related fields
+        $('#jobFields').hide();
+
+        // Show or hide the job-related fields based on the user's selection
+        $('input[name="job_status"]').change(function() {
+            if ($(this).val() === 'yes') {
+                $('#jobFields').show();
+                // Add required attribute to the fields
+                $('#jobFields textarea[name="connected_to"]').prop('required', true);
+                $('#jobFields input[name="job_title"]').prop('required', true);
+            } else {
+                $('#jobFields').hide();
+                // Remove required attribute from the fields
+                $('#jobFields textarea[name="connected_to"]').prop('required', false);
+                $('#jobFields input[name="job_title"]').prop('required', false);
+            }
+        });
+         // Remove default radio button selection
+    $('input[name="job_status"]').prop('checked', false);
+    });
+    // Check if passwords match and display appropriate alert
+$('#re_password').on('keyup', function () {
+    var password = $('#password').val();
+    var re_password = $(this).val();
+    var passwordMatchAlert = '';
+
+    if (password === re_password) {
+        passwordMatchAlert = '<div class="alert alert-success">Passwords match!</div>';
+    } else {
+        passwordMatchAlert = '<div class="alert alert-danger">Passwords do not match!</div>';
+    }
+
+    // Remove any existing password match alert
+    $(this).parent().find('.password-match-alert').remove();
+    
+    // Append the password match alert next to the "Re-enter Password" field
+    $(this).parent().append('<div class="password-match-alert">' + passwordMatchAlert + '</div>');
+});
+
+</script>
+</body>
+</html>
